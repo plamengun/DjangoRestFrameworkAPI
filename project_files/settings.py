@@ -38,11 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'corsheaders',
-    'EmployeeApp.apps.EmployeeappConfig'
+    'EmployeeApp.apps.EmployeeappConfig',
+    'accounts',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
+
+AUTH_USER_MODEL = "accounts.User"
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
@@ -57,6 +61,19 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'project_files.urls'
+
+
+REST_FRAMEWORK = {
+    "NON_FIELD_ERRORS_KEY": "errors",
+    "DEFAULT_AUTHENTICATION_CLASSES":(
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication"
+    ),
+    "DEFAULT_PERMISSON_CLASSES":(
+        "rest_framework.permissions.IsAuthenticated"
+    )
+}
+
 
 TEMPLATES = [
     {
