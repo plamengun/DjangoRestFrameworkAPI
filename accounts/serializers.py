@@ -7,11 +7,11 @@ from .models import User
 class SignUpSerializer(serializers.ModelSerializer):
     email = serializers.CharField(max_length=150)
     username = serializers.CharField(max_length=150)
-    password = serializers.CharField(max_length=8, write_only=True)
+    password = serializers.CharField(min_length=8, write_only=True)
 
     class Meta:
         model = User
-        fields = ["email", "username", "password"]
+        fields = ["email", "password", "username"]
 
     def validate(self, attrs):
         email_exists = User.objects.filter(email=attrs['email']).exists()
@@ -31,3 +31,21 @@ class SignUpSerializer(serializers.ModelSerializer):
         Token.objects.create(user=user)
 
         return user
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'password')
+
+
+# class CompanyWithEmployeesSerializer(serializers.ModelSerializer):
+
+#     employees = serializers.StringRelatedField(
+#         many=True
+#     )
+
+#     class Meta:
+#         model=User
+#         field=['id', 'username', 'password']
+

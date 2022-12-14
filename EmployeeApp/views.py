@@ -6,9 +6,11 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 
+from accounts.serializers import UserSerializer
 from EmployeeApp.serializers import CompaniesSerializer
-from EmployeeApp.models import Companies
+from EmployeeApp.models import Companies, User
 
 
 def api_home(request, *args, **kwargs):
@@ -31,7 +33,14 @@ class CompanyCreate(APIView):
         if company_name_exists:
             raise ValidationError("Company with the same name already exists")
 
-        serializer = CompaniesSerializer(data=request.data)
+        user_id = Token.objects.get(key=request.auth.key).user_id
+        user = User.objects.get(id=user_id)
+        user_info= UserSerializer(instance=user)
+        # user = request.user
+        u = {'email': user_info.data['email'], 'password': user_info.data['password']}
+        # user = {'email': request.data['email'], 'password': request.data['password']}
+        serializer = CompaniesSerializer(data={'user':u, 'company_name':request.data['company_name'], 'company_description':request.data['company_description'], 'company_logo':request.data['company_logo']})
+        # serializer = CompaniesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
