@@ -5,6 +5,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.validators import ValidationError
+from rest_framework.permissions import IsAuthenticated
 
 from EmployeeApp.serializers import CompaniesSerializer
 from EmployeeApp.models import Companies
@@ -13,9 +14,7 @@ from EmployeeApp.models import Companies
 def api_home(request, *args, **kwargs):
     return JsonResponse({"message": 'Hi there, this is a Django API response serving as a homepage :D'})
 
-#ToDo add auth requirement to access endpoints
 
-    
 class CompaniesList(APIView):
     def get(self, request):
         companies = Companies.objects.all()
@@ -24,6 +23,9 @@ class CompaniesList(APIView):
 
 
 class CompanyCreate(APIView):
+
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         company_name_exists = Companies.objects.filter(company_name=request.data['company_name']).exists()
         if company_name_exists:
@@ -37,7 +39,9 @@ class CompanyCreate(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class Company(APIView):
+class CompanyDetails(APIView):
+
+    permission_classes = [IsAuthenticated]
 
     def get_company_by_id_or_404(self, pk):
         try:
