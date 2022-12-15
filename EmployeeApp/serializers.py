@@ -5,26 +5,19 @@ from accounts.models import User
 
 
 class CompaniesSerializer(serializers.ModelSerializer):
-    user = UserSerializer(write_only=True)
+    user_id = serializers.IntegerField(write_only=True)
 
     class Meta:
         model = Companies
-        fields = ('user', 'company_name', 'company_description', 'company_logo')
+        fields = ('user_id', 'company_name', 'company_description', 'company_logo')
 
-    def create_obj(self, validated_data):
-        user_data = validated_data.pop('user')
-        u = User.objects.get(**user_data)
-        print(u)
-
-        company = Companies.objects.create(
+    def create(self, validated_data):
+        company, is_created = Companies.objects.get_or_create(
                                         company_name=validated_data['company_name'],
                                         company_description=validated_data['company_description'],
                                         company_logo=validated_data['company_logo'],
-                                        user_id=u.data['id'],
+                                        user_id=validated_data['user_id'],
                                         )
-        # u.set_password(user_data['password'])
-        # u.save()
-        company.save()
         return company
 
 
