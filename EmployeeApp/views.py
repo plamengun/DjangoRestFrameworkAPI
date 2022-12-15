@@ -36,11 +36,11 @@ class CompanyCreate(APIView):
         user_id = Token.objects.get(key=request.auth.key).user_id
         user = User.objects.get(id=user_id)
         user_info= UserSerializer(instance=user)
-        print(user_info)
+        # print(user_info)
         # user = request.user
         u = {'email': user_info.data['email'], 'password': user_info.data['password']}
         # user = {'email': request.data['email'], 'password': request.data['password']}
-        serializer = CompaniesSerializer(data={'user':user_id, 'company_name':request.data['company_name'], 'company_description':request.data['company_description'], 'company_logo':request.data['company_logo']})
+        serializer = CompaniesSerializer(data={'user':u, 'company_name':request.data['company_name'], 'company_description':request.data['company_description'], 'company_logo':request.data['company_logo']})
         # serializer = CompaniesSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()

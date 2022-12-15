@@ -5,7 +5,7 @@ from accounts.models import User
 
 
 class CompaniesSerializer(serializers.ModelSerializer):
-    user = UserSerializer(read_only=True)
+    user = UserSerializer(write_only=True)
 
     class Meta:
         model = Companies
@@ -20,7 +20,7 @@ class CompaniesSerializer(serializers.ModelSerializer):
                                         company_name=validated_data['company_name'],
                                         company_description=validated_data['company_description'],
                                         company_logo=validated_data['company_logo'],
-                                        default = {'user':u}
+                                        user_id=u.data['id'],
                                         )
         # u.set_password(user_data['password'])
         # u.save()
