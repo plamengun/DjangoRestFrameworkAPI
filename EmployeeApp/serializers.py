@@ -5,7 +5,7 @@ from accounts.models import User
 
 
 class CompaniesSerializer(serializers.ModelSerializer):
-    user = UserSerializer()
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Companies
@@ -13,13 +13,14 @@ class CompaniesSerializer(serializers.ModelSerializer):
 
     def create_obj(self, validated_data):
         user_data = validated_data.pop('user')
-        u = User.objects.create(**user_data)
+        u = User.objects.get(**user_data)
+        print(u)
 
         company = Companies.objects.create(
-                                        user=u,
                                         company_name=validated_data['company_name'],
                                         company_description=validated_data['company_description'],
                                         company_logo=validated_data['company_logo'],
+                                        default = {'user':u}
                                         )
         # u.set_password(user_data['password'])
         # u.save()

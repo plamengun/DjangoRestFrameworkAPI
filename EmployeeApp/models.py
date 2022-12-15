@@ -3,7 +3,7 @@ from accounts.models import User
 
 
 class Companies(models.Model):
-    user = models.OneToOneField(User, primary_key=True, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     company_name = models.CharField(max_length=200)
     company_description = models.CharField(max_length=2000)
     company_logo = models.CharField(max_length=500)
