@@ -4,7 +4,7 @@ from accounts.serializers import SignUpSerializer, UserSerializer
 from accounts.models import User
 
 
-class CompaniesSerializer(serializers.ModelSerializer):
+class CompanySerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(write_only=True)
 
     class Meta:
@@ -22,24 +22,24 @@ class CompaniesSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
+    company_id = serializers.IntegerField(write_only=True)
+
     class Meta:
         model = Employees
-        fields = ('id', 'first_name', 'last_name', 'date_of_birth', 'photo', 'position', 'salary')
+        fields = ('company_id', 'first_name', 'last_name', 'date_of_birth', 'photo', 'position', 'salary')
 
-    def set_company(self, company):
-        self.company = company
+    # def set_company(self, company):
+    #     self.company = company
 
-    def create_obj(self, validated_data):
+    def create(self, validated_data):
         
-        employee = Employees.objects.create(id=validated_data['id'],
+        employee, is_created = Employees.objects.get_or_create(
                                             first_name=validated_data['first_name'],
                                             last_name=validated_data['last_name'],
                                             date_of_birth=validated_data['date_of_birth'],
                                             photo=validated_data['photo'],
                                             position=validated_data['position'],
                                             salary=validated_data['salary'],
-                                            company=self.company,
+                                            company_id=validated_data['company_id'],
                                             )
-
-        employee.save()
         return employee
