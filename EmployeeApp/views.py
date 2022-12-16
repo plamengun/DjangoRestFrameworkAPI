@@ -10,12 +10,18 @@ from rest_framework.permissions import IsAuthenticated
 from EmployeeApp.serializers import CompanySerializer, EmployeeSerializer
 from EmployeeApp.models import Companies, Employees
 
+from drf_yasg.utils import swagger_auto_schema
+
 
 def api_home(request, *args, **kwargs):
     return JsonResponse({"message": 'Hi there, this is a Django API response serving as a homepage :D'})
 
 
 class CompaniesList(APIView):
+    @swagger_auto_schema(
+        operation_summary="List all companies",
+        operation_description="This returns a list of all companies to any viewer"
+    )
     def get(self, request):
         companies = Companies.objects.all()
         serializer = CompanySerializer(companies, many=True)
@@ -26,6 +32,10 @@ class CompanyCreate(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_summary="Create a company",
+        operation_description="This allows logged-in user to create a company"
+    )
     def post(self, request):
         company_name_exists = Companies.objects.filter(company_name=request.data['company_name']).exists()
         if company_name_exists:
@@ -51,29 +61,54 @@ class CompanyDetails(APIView):
         except Companies.DoesNotExist:
             raise Http404()
 
+    def check_if_company_belongs_to_user(self, request, company):
+        if request.auth.user_id != company.user_id:
+            raise ValidationError("Company does not belong to you")
+        return True
+
+
+    @swagger_auto_schema(
+        operation_summary="Get a company by id",
+        operation_description="This allows a logged-in user to access detailed company info"
+    )
     def get(self, request, pk):
         company = self.get_company_by_id_or_404(pk)
-        serializer = CompanySerializer(company)
-        return Response(serializer.data)
+        if self.check_if_company_belongs_to_user(request, company):
+            serializer = CompanySerializer(company)
+            return Response(serializer.data)
 
+    @swagger_auto_schema(
+        operation_summary="Edit company info",
+        operation_description="This allows a logged-in user to edit the company info"
+    )
     def put(self, request, pk):
         company = self.get_company_by_id_or_404(pk)
-        serializer = CompanySerializer(company, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if self.check_if_company_belongs_to_user(request, company):
+            serializer = CompanySerializer(company, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        operation_summary="Delete a company",
+        operation_description="This allows a logged-in user to delete a company"
+    )
     def delete(self, request, pk):
         company = self.get_company_by_id_or_404(pk)
-        company.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        if self.check_if_company_belongs_to_user(request, company):
+            company.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class EmployeeCreate(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_summary="Create an employee",
+        operation_description="This allows a logged-in company to create an employee"
+    )
     def post(self, request):
         company = Companies.objects.get(user_id=request.auth.user_id)
         if not company:
@@ -93,6 +128,10 @@ class EmployeesList(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    @swagger_auto_schema(
+        operation_summary="List all employees",
+        operation_description="This allows a company to view a list of all it's employees"
+    )
     def get(self, request):
         company = Companies.objects.get(user_id=request.auth.user_id)
         if not company:
@@ -124,7 +163,10 @@ class EmployeeDetails(APIView):
             raise ValidationError("Employee is not part of your company")
         return True
 
-
+    @swagger_auto_schema(
+        operation_summary="Get an employee by id",
+        operation_description="This allows a logged-in company to access info for one of it's employees"
+    )
     def get(self, request, pk):
         employee = self.get_employee_by_id_or_404(pk)
         company = self.check_if_logged_as_company(request)
@@ -132,6 +174,10 @@ class EmployeeDetails(APIView):
             serializer = EmployeeSerializer(employee)
             return Response(serializer.data)
 
+    @swagger_auto_schema(
+        operation_summary="Edit employee info",
+        operation_description="This allows a company to edit the info of one of it's employees"
+    )
     def put(self, request, pk):
         employee = self.get_employee_by_id_or_404(pk)
         company = self.check_if_logged_as_company(request)
@@ -142,6 +188,10 @@ class EmployeeDetails(APIView):
                 return Response(serializer.data)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(
+        operation_summary="Delete employee",
+        operation_description="This allows a company to delete one of it's employees"
+    )
     def delete(self, request, pk):
         employee = self.get_employee_by_id_or_404(pk)
         company = self.check_if_logged_as_company(request)
