@@ -41,13 +41,3 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-
-
-# class CompanyAccount(models.Model):
-#     user = models.OneToOneField(User, related_name='profile_data', primary_key=True, on_delete=models.CASCADE)
-#     company_name=models.CharField(max_length=200)
-
-#     objects=CustomUserManager()
-
-#     def __str__(self):
-#         return self.company_name

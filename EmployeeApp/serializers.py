@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import Companies, Employees
-from accounts.serializers import SignUpSerializer, UserSerializer
-from accounts.models import User
 
 
 class CompanySerializer(serializers.ModelSerializer):
@@ -28,8 +26,6 @@ class EmployeeSerializer(serializers.ModelSerializer):
         model = Employees
         fields = ('company_id', 'first_name', 'last_name', 'date_of_birth', 'photo', 'position', 'salary')
 
-    # def set_company(self, company):
-    #     self.company = company
 
     def create(self, validated_data):
         

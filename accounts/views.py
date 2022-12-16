@@ -1,11 +1,9 @@
-from django.shortcuts import render
 from django.contrib.auth import authenticate
 from .serializers import SignUpSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
-# Create your views here.
 
 
 class SignUpView(generics.GenericAPIView):
