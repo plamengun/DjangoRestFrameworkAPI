@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'EmployeeApp.apps.EmployeeappConfig',
     'accounts',
+    'drf_yasg',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
