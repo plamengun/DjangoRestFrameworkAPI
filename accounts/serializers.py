@@ -39,13 +39,3 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('email', 'password')
 
 
-# class CompanyWithEmployeesSerializer(serializers.ModelSerializer):
-
-#     employees = serializers.StringRelatedField(
-#         many=True
-#     )
-
-#     class Meta:
-#         model=User
-#         field=['id', 'username', 'password']
-
