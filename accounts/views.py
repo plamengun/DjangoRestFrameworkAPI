@@ -1,9 +1,10 @@
 from django.contrib.auth import authenticate
-from .serializers import SignUpSerializer
+from .serializers import SignUpSerializer, UserSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.request import Request
 from rest_framework.views import APIView
+from drf_yasg.utils import swagger_auto_schema
 
 
 class SignUpView(generics.GenericAPIView):
@@ -29,6 +30,7 @@ class SignUpView(generics.GenericAPIView):
 
 class LoginView(APIView):
 
+    @swagger_auto_schema(request_body=UserSerializer)
     def post(self, request: Request):
         email = request.data.get('email')
         password = request.data.get('password')
