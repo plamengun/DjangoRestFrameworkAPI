@@ -67,19 +67,23 @@ def test_login_view_post_when_unsuccessful():
     assert response.data["message"] == "Invalid username or password"
     assert response.status_code == 401
 
+#ToDo Test when user is not logged - should return AnonymousUser code 200
+@pytest.mark.django_db
+def test_get_logged_in_user_view():
+    payload = {
+        "username": "Plamen",
+        "email": "plamenmgunchev@gmail.com",
+        "password": "12345678"
+    }
+    client.post("/api/auth/signup", payload)
+    login_response = client.post("/api/auth/login", {"email": "plamenmgunchev@gmail.com",
+                                                     "password": "12345678"})
+    token = login_response.data['token']
 
-# @pytest.mark.django_db
-# def test_get_logged_in_user_view():
-#     payload = {
-#         "username": "Plamen",
-#         "email": "plamenmgunchev@gmail.com",
-#         "password": "12345678"
-#     }
-#     client.post("/api/auth/signup", payload)
-#     request = client.post("/api/auth/login", {"email": "plamenmgunchev@gmail.com",
-#                                               "password": "12345678"})
-#
-#     response = client.get("/api/auth/login", data=request.data['token'])
-#
-#     assert response.data["user"] == 'Plamen'
-#     # assert response.status_code == 200
+    cred = client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+
+    response = client.get("/api/auth/login", data=cred)
+
+    assert response.data["user"] == 'Plamen'
+    assert response.data["auth"] == token
+    assert response.status_code == 200

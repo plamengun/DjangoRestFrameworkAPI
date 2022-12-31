@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="0" tests="8" time="4.761" timestamp="2022-12-31T13:52:49.107582" hostname="Plamen"><testcase classname="tests.EmployeeApp.test_views" name="test_get_company_list_view" time="1.336" /><testcase classname="tests.EmployeeApp.test_views" name="test_company_create" time="0.458" /><testcase classname="tests.EmployeeApp.test_views" name="test_get_own_company_info_successful" time="0.751"><failure message="AssertionError: assert {'detail': Er...='not_found')} == {'company_des...Test Company'}&#10;  Left contains 1 more item:&#10;  {'detail': ErrorDetail(string='Not found.', code='not_found')}&#10;  Right contains 3 more items:&#10;  {'company_description': 'comp descr',&#10;   'company_logo': 'logo.asd',&#10;   'company_name': 'Test Company'}&#10;  Use -v to get more diff">register_and_login_user = &lt;Response status_code=200, "application/json"&gt;, create_company = &lt;Response status_code=201, "application/json"&gt;
+
+    @pytest.mark.django_db
+    def test_get_own_company_info_successful(register_and_login_user, create_company):
+        token = register_and_login_user.data['token']
+    
+        client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+    
+        comp = create_company
+    
+        request = client.get('/api/companies/1/', format='json')
+    
+&gt;       assert request.data == MOCK_COMPANY_RESPONSE
+E       AssertionError: assert {'detail': Er...='not_found')} == {'company_des...Test Company'}
+E         Left contains 1 more item:
+E         {'detail': ErrorDetail(string='Not found.', code='not_found')}
+E         Right contains 3 more items:
+E         {'company_description': 'comp descr',
+E          'company_logo': 'logo.asd',
+E          'company_name': 'Test Company'}
+E         Use -v to get more diff
+
+tests\EmployeeApp\test_views.py:73: AssertionError</failure></testcase><testcase classname="tests.accounts.test_accounts" name="test_signup_view_post_when_successful" time="0.234" /><testcase classname="tests.accounts.test_accounts" name="test_signup_view_post_when_unsuccessful" time="0.006" /><testcase classname="tests.accounts.test_accounts" name="test_login_view_post_when_successful" time="0.454" /><testcase classname="tests.accounts.test_accounts" name="test_login_view_post_when_unsuccessful" time="0.457" /><testcase classname="tests.accounts.test_accounts" name="test_get_logged_in_user_view" time="0.714" /></testsuite></testsuites>
