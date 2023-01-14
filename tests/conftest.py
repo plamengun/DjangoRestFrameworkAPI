@@ -6,6 +6,18 @@ client = APIClient()
 
 
 @pytest.fixture
+def signup():
+    payload = {
+        "username": "testuser",
+        "email": "email@mail.com",
+        "password": "12345678"
+    }
+
+    signup_response = client.post("/api/auth/signup", payload)
+    return signup_response.data
+
+
+@pytest.fixture
 def register_and_login_user():
     payload = {
         "username": "testuser",

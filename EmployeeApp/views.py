@@ -81,10 +81,10 @@ class CompanyDetails(APIView):
         operation_summary="Edit company info",
         operation_description="This allows a logged-in user to edit the company info"
     )
-    def put(self, request, pk):
+    def patch(self, request, pk):
         company = self.get_company_by_id_or_404(pk)
         if self.check_if_company_belongs_to_user(request, company):
-            serializer = CompanySerializer(company, data=request.data)
+            serializer = CompanySerializer(company, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data)
