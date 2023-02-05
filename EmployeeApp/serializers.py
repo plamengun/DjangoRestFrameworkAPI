@@ -25,7 +25,7 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Employees
-        fields = ('company_id', 'first_name', 'last_name',
+        fields = ('id', 'company_id', 'first_name', 'last_name',
                   'date_of_birth', 'photo', 'position', 'salary')
 
     def create(self, validated_data):
