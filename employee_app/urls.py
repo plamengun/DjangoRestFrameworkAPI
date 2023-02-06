@@ -1,6 +1,6 @@
 from django.urls import path
 
-from EmployeeApp.views import CompaniesList, CompanyCreate, CompanyDetails, EmployeeCreate, \
+from employee_app.views import CompaniesList, CompanyCreate, CompanyDetails, EmployeeCreate, \
     EmployeesList, EmployeeDetails
 
 #ToDO URL must be uniqie regardless of the request method used :?

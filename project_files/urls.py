@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-from EmployeeApp import views
+from employee_app import views
 
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
@@ -41,6 +41,6 @@ urlpatterns = [
     re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
     path('admin/', admin.site.urls),
     path('', views.api_home),
-    path('api/', include('EmployeeApp.urls')),
+    path('api/', include('employee_app.urls')),
     path('api/auth/', include('accounts.urls')),
 ]
