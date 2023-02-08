@@ -10,6 +10,7 @@ from drf_yasg.utils import swagger_auto_schema
 class SignUpView(generics.GenericAPIView):
     serializer_class = SignUpSerializer
 
+    @swagger_auto_schema(request_body=SignUpSerializer, tags=['Signup/Login'])
     def post(self, request: Request):
         data = request.data
 
@@ -30,7 +31,7 @@ class SignUpView(generics.GenericAPIView):
 
 class LoginView(APIView):
 
-    @swagger_auto_schema(request_body=UserSerializer)
+    @swagger_auto_schema(request_body=UserSerializer, tags=['Signup/Login'])
     def post(self, request: Request):
         email = request.data.get('email')
         password = request.data.get('password')
@@ -47,6 +48,7 @@ class LoginView(APIView):
             return Response(data={"message": "Invalid username or password"},
                             status=status.HTTP_401_UNAUTHORIZED)
 
+    @swagger_auto_schema(tags=['Signup/Login'])
     def get(self, request: Request):
         content = {
             "user": str(request.user),

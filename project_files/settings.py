@@ -69,6 +69,18 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project_files.urls'
 
+SWAGGER_SETTINGS = {
+   'SECURITY_DEFINITIONS': {
+      'Basic': {
+            'type': 'basic'
+      },
+      'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+      }
+   }
+}
 
 REST_FRAMEWORK = {
     "NON_FIELD_ERRORS_KEY": "errors",

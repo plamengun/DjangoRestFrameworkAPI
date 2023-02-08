@@ -18,7 +18,8 @@ def api_home(request, *args, **kwargs):
 class CompaniesList(APIView):
     @swagger_auto_schema(
         operation_summary="List all companies",
-        operation_description="This returns a list of all companies to any viewer"
+        operation_description="This returns a list of all companies to any viewer",
+        tags=["Company Endpoints"],
     )
     def get(self, request):
 
@@ -38,8 +39,10 @@ class CompanyCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
+        request_body=CompanySerializer,
         operation_summary="Create a company",
-        operation_description="This allows logged-in user to create a company"
+        operation_description="This allows logged-in user to create a company",
+        tags=["Company Endpoints"],
     )
     def post(self, request):
 
@@ -83,7 +86,8 @@ class CompanyDetails(APIView):
 
     @swagger_auto_schema(
         operation_summary="Get a company by id",
-        operation_description="This allows a logged-in user to access detailed company info"
+        operation_description="This allows a logged-in user to access detailed company info",
+        tags=["Company Endpoints"],
     )
     def get(self, request, pk):
 
@@ -100,8 +104,10 @@ class CompanyDetails(APIView):
             return Response(serializer.data)
 
     @swagger_auto_schema(
+        request_body=CompanySerializer,
         operation_summary="Edit company info",
-        operation_description="This allows a logged-in user to edit the company info"
+        operation_description="This allows a logged-in user to edit the company info",
+        tags=["Company Endpoints"],
     )
     def patch(self, request, pk):
 
@@ -122,7 +128,8 @@ class CompanyDetails(APIView):
 
     @swagger_auto_schema(
         operation_summary="Delete a company",
-        operation_description="This allows a logged-in user to delete a company"
+        operation_description="This allows a logged-in user to delete a company",
+        tags=["Company Endpoints"],
     )
     def delete(self, request, pk):
 
@@ -144,8 +151,10 @@ class EmployeeCreate(APIView):
     permission_classes = [IsAuthenticated]
 
     @swagger_auto_schema(
+        request_body=EmployeeSerializer,
         operation_summary="Create an employee",
-        operation_description="This allows a logged-in company to create an employee"
+        operation_description="This allows a logged-in company to create an employee",
+        tags=["Employee Endpoints"],
     )
     def post(self, request, pk: int):
 
@@ -176,7 +185,8 @@ class EmployeesList(APIView):
 
     @swagger_auto_schema(
         operation_summary="List all employees for a given company",
-        operation_description="This allows a company to view a list of all it's employees"
+        operation_description="This allows a company to view a list of all it's employees",
+        tags=["Employee Endpoints"],
     )
     def get(self, request, pk):
 
@@ -224,9 +234,10 @@ class EmployeeDetails(APIView):
     @swagger_auto_schema(
         operation_summary="Get an employee by id",
         operation_description="This allows a logged-in company "
-                              "to access info for one of it's employees"
+                              "to access info for one of it's employees",
+        tags=["Employee Endpoints"],
     )
-    def get(self, request, pk):
+    def get(self, request, pk: int):
 
         """
         Get employee info by id
@@ -242,8 +253,10 @@ class EmployeeDetails(APIView):
             return Response(serializer.data)
 
     @swagger_auto_schema(
+        request_body=EmployeeSerializer,
         operation_summary="Edit employee info",
-        operation_description="This allows a company to edit the info of one of it's employees"
+        operation_description="This allows a company to edit the info of one of it's employees",
+        tags=["Employee Endpoints"],
     )
     def patch(self, request, pk):
 
@@ -267,7 +280,8 @@ class EmployeeDetails(APIView):
 
     @swagger_auto_schema(
         operation_summary="Delete employee",
-        operation_description="This allows a company to delete one of it's employees"
+        operation_description="This allows a company to delete one of it's employees",
+        tags=["Employee Endpoints"],
     )
     def delete(self, request, pk):
 
